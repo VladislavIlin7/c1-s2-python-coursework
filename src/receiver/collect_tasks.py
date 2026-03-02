@@ -3,7 +3,12 @@ from src.protocols.task_source import TaskSource
 from src.task_model.task import Task
 
 
-def validate_source(source: TaskSource) -> list[Task]:
+def collect_tasks(source: TaskSource) -> list[Task]:
+    """
+    Проверяет источник и получает задачи
+
+    :param source: Объект реализующий контракт TaskSource
+    """
     if not isinstance(source, TaskSource):
         raise InvalidTaskSourceException
     return source.get_tasks()

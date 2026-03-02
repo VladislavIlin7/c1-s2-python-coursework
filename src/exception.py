@@ -11,3 +11,15 @@ class InvalidTaskSourceException(ApplicationException):
 class InvalidCountException(ApplicationException):
     def __init__(self):
         super().__init__("Количество генерируемых задач не может быть < 0")
+
+class InvalidTaskDataException(ApplicationException):
+    def __init__(self):
+        super().__init__("Файл JSON должен содержать массив задач")
+
+class InvalidTypeTaskDataException(ApplicationException):
+    def __init__(self):
+        super().__init__("Каждый элемент должен быть в виде словаря")
+
+class InvalidTaskItemException(ApplicationException):
+    def __init__(self):
+        super().__init__("Задачи должны иметь свой id")

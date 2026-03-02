@@ -1,5 +1,6 @@
 from typing import Any
 
+from src.exception import InvalidCountException
 from src.task_model.task import Task
 
 
@@ -8,16 +9,26 @@ class GeneratorTaskSource:
     Генератор задач
     """
 
-    def __init__(self, count: int, start_id=1, payload_sample: Any = None):
+    def __init__(self, count: int, start_id=1, payload_sample: Any = None) -> None:
+        """
+        Создает генератор задач
+
+        :param count: Количество задач
+        :param start_id: Начальный id задачи
+        :param payload_sample: Данные которые будут использоваться как payload
+        """
 
         if count < 0:
-            raise
+            raise InvalidCountException
 
         self._count = count
         self._start_id = start_id
         self._payload_sample = payload_sample
 
     def get_tasks(self) -> list[Task]:
+        """
+        Генерирует список задач и возвращает его
+        """
         tasks: list[Task] = []
         for i in range(self._count):
             task_id = self._start_id + i
@@ -25,5 +36,5 @@ class GeneratorTaskSource:
                 payload = f"generated task {task_id}"
             else:
                 payload = self._payload_sample
-            tasks.append(Task(task_id, payload))
+            tasks.append(Task(str(task_id), payload))
         return tasks
