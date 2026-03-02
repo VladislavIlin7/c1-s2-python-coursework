@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1",
+    "payload": "file task 1"
+  },
+  {
+    "id": "2",
+    "payload": {
+      "type": "email",
+      "to": "user@test.com"
+    }
+  }
+]
