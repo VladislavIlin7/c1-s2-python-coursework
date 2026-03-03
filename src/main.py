@@ -1,3 +1,5 @@
+import logging
+import sys
 from pathlib import Path
 
 from src.receiver.collect_tasks import collect_tasks
@@ -5,6 +7,11 @@ from src.sources.api_tasks_source import ApiTaskSource
 from src.sources.file_tasks_source import FileTaskSource
 from src.sources.generator_tasks_source import GeneratorTaskSource
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)s: %(message)s',
+    stream=sys.stdout
+)
 
 def main() -> None:
     # Генератор

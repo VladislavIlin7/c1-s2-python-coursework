@@ -1,7 +1,10 @@
+import logging
 from typing import Any
 
 from src.exception import InvalidCountException
 from src.task_model.task import Task
+
+logger = logging.getLogger(__name__)
 
 
 class GeneratorTaskSource:
@@ -17,8 +20,8 @@ class GeneratorTaskSource:
         :param start_id: Начальный id задачи
         :param payload_sample: Данные которые будут использоваться как payload
         """
-
         if count < 0:
+            logger.error("Количество генерируемых задач не может быть < 0")
             raise InvalidCountException
 
         self._count = count
@@ -29,6 +32,8 @@ class GeneratorTaskSource:
         """
         Генерирует список задач и возвращает его
         """
+        logger.info("Генерация %s задач", self._count)
+
         tasks: list[Task] = []
         for i in range(self._count):
             task_id = self._start_id + i
@@ -37,4 +42,5 @@ class GeneratorTaskSource:
             else:
                 payload = self._payload_sample
             tasks.append(Task(str(task_id), payload))
+
         return tasks

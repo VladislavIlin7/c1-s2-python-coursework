@@ -1,6 +1,9 @@
+import logging
+
 from src.exception import InvalidTaskItemException
 from src.task_model.task import Task
 
+logger = logging.getLogger(__name__)
 
 class ApiTaskSource:
     """
@@ -21,6 +24,7 @@ class ApiTaskSource:
         """
         Возвращает задачи как будто получены из api
         """
+        logger.info("Имитация запроса к API")
         # url = self._basic_url + "/" + self._path
 
         data = [
@@ -34,6 +38,7 @@ class ApiTaskSource:
             payload = item.get("payload")
 
             if task_id is None:
+                logger.error("Задачи должны иметь свой id")
                 raise InvalidTaskItemException
 
             tasks.append(Task(task_id, payload))
