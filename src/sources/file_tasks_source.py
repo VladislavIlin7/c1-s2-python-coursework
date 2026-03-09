@@ -6,6 +6,7 @@ from src.task_model.task import Task
 
 logger = logging.getLogger(__name__)
 
+
 class FileTaskSource:
     """
     Читает задачи из json файла

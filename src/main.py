@@ -14,6 +14,7 @@ logging.basicConfig(
 )
 
 def main() -> None:
+
     # Генератор
     generator = GeneratorTaskSource(count=2)
     gen_tasks = collect_tasks(generator)
@@ -25,7 +26,7 @@ def main() -> None:
     print("API:", api_tasks)
 
     # Файл
-    base_dir = Path(__file__).resolve().parent  # папка src
+    base_dir = Path(__file__).resolve().parent
     file_path = base_dir / "tasks.json"
     file_source = FileTaskSource(str(file_path))
     file_tasks = collect_tasks(file_source)

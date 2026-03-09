@@ -5,6 +5,7 @@ from src.task_model.task import Task
 
 logger = logging.getLogger(__name__)
 
+
 class ApiTaskSource:
     """
     Имитирует внешний api

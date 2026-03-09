@@ -31,20 +31,19 @@
 ### Task
 
 Реализован через `@dataclass`.  
-Содержит `id` и `payload`.
+Содержит `id: int` и `payload: Any`.
 
 ### Контракт
 
 Используется `Protocol` и `@runtime_checkable`.  
-Источник обязан реализовать `get_tasks()`.
+Источник обязан реализовать `get_tasks() -> list[Task]`.
 
 ### Источники
 
-Реализованы:
 
-- GeneratorTaskSource
-- FileTaskSource
-- ApiTaskSource
+- `GeneratorTaskSource` - задачи, генерируемые программно
+- `FileTaskSource` - задачи, загружаемые из файла
+- `ApiTaskSource` - задачи, получаемые из API-заглушки
 
 ### Тесты
 
@@ -56,7 +55,7 @@
 pip install -r requirements.txt
 ```
 
-запуск pytest
+запуск тестов
 
 ```bash
 pytest tests/ -v
