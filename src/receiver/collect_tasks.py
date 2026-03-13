@@ -12,6 +12,7 @@ def collect_tasks(source: TaskSource) -> list[Task]:
     Проверяет источник и получает задачи
 
     :param source: Объект реализующий контракт TaskSource
+    :return: Список задач полученных из источника
     """
     if not isinstance(source, TaskSource):
         logger.error("Некорректный источник задач, не соблюдается TaskSource")

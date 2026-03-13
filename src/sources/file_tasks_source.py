@@ -23,6 +23,8 @@ class FileTaskSource:
     def get_tasks(self) -> list[Task]:
         """
         Читает файл и возвращает список задач
+
+        :return: Список задач прочитанных из файла
         """
         logger.info("Чтение задач из файла %s", self._path)
         with open(self._path, encoding="utf-8") as f:

@@ -31,6 +31,8 @@ class GeneratorTaskSource:
     def get_tasks(self) -> list[Task]:
         """
         Генерирует список задач и возвращает его
+
+        :return: Список сгенерированных задач
         """
         logger.info("Генерация %s задач", self._count)
 

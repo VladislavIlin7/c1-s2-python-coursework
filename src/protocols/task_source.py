@@ -14,5 +14,7 @@ class TaskSource(Protocol):
     def get_tasks(self) -> list[Task]:
         """
         Возвращает список объектов Task
+
+        :return: Список задач
         """
         ...

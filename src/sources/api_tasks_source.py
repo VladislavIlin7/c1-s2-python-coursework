@@ -24,6 +24,8 @@ class ApiTaskSource:
     def get_tasks(self) -> list[Task]:
         """
         Возвращает задачи как будто получены из api
+
+        :return: Список задач полученных из api
         """
         logger.info("Имитация запроса к API")
         # url = self._basic_url + "/" + self._path
