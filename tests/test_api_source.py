@@ -8,4 +8,7 @@ def test_api_basic():
 
     assert len(tasks) == 2
     assert isinstance(tasks[0], Task)
-    assert tasks[1] == Task(id="2", payload="api task 2")
+    assert tasks[1].id == "2"
+    assert tasks[1].description == "api task 2"
+    assert tasks[1].priority == 0
+    assert tasks[1].status == "new"

@@ -19,8 +19,12 @@ def test_file_basic(tmp_path):
     tasks = source.get_tasks()
 
     assert len(tasks) == 2
-    assert tasks[0] == Task(id="1", payload="a")
-    assert tasks[1] == Task(id="2", payload="b")
+    assert isinstance(tasks[0], Task)
+    assert isinstance(tasks[1], Task)
+    assert tasks[0].id == "1"
+    assert tasks[0].description == "a"
+    assert tasks[1].id == "2"
+    assert tasks[1].description == "b"
 
 
 def test_file_not_list(tmp_path):

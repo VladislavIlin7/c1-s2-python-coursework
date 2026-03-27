@@ -43,6 +43,13 @@ class GeneratorTaskSource:
                 payload = f"generated task {task_id}"
             else:
                 payload = self._payload_sample
-            tasks.append(Task(str(task_id), payload))
+            tasks.append(
+                Task(
+                    id=str(task_id),
+                    description=str(payload),
+                    priority=0,
+                    status="new",
+                )
+            )
 
         return tasks

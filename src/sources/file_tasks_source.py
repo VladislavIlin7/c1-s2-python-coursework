@@ -48,6 +48,13 @@ class FileTaskSource:
                 logger.error("Задачи должны иметь свой id")
                 raise InvalidTaskItemException
 
-            tasks.append(Task(task_id, payload))
+            tasks.append(
+                Task(
+                    id=str(task_id),
+                    description=str(payload),
+                    priority=0,
+                    status="new",
+                )
+            )
 
         return tasks

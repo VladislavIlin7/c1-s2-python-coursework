@@ -28,3 +28,28 @@ class InvalidTypeTaskDataException(ApplicationException):
 class InvalidTaskItemException(ApplicationException):
     def __init__(self):
         super().__init__("Задачи должны иметь свой id")
+
+
+class InvalidTaskIdException(ApplicationException):
+    def __init__(self) -> None:
+        super().__init__("Идентификатор задачи должен быть непустой строкой")
+
+
+class InvalidTaskDescriptionException(ApplicationException):
+    def __init__(self) -> None:
+        super().__init__("Описание задачи должно быть непустой строкой")
+
+
+class InvalidTaskPriorityException(ApplicationException):
+    def __init__(self) -> None:
+        super().__init__("Приоритет задачи должен быть целым числом >= 0")
+
+
+class InvalidTaskStatusException(ApplicationException):
+    def __init__(self) -> None:
+        super().__init__("Статус задачи имеет недопустимое значение")
+
+
+class InvalidTaskCreatedAtException(ApplicationException):
+    def __init__(self) -> None:
+        super().__init__("Время создания задачи должно быть объектом datetime")

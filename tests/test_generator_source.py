@@ -16,7 +16,7 @@ def test_generator_payload_sample():
     source = GeneratorTaskSource(count=2, payload_sample="x")
     tasks = source.get_tasks()
 
-    assert all(t.payload == "x" for t in tasks)
+    assert all(t.description == "x" for t in tasks)
 
 
 def test_generator_negative():

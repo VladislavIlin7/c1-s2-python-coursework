@@ -13,24 +13,35 @@ logging.basicConfig(
     stream=sys.stdout
 )
 
+
+def print_tasks(title: str, tasks: list) -> None:
+    print(f"\n=== {title} ({len(tasks)} задач) ===")
+
+    for i, task in enumerate(tasks, start=1):
+        print(f"[{i}] id={task.id}, desc={task.description}, "
+              f"priority={task.priority}, status={task.status}, "
+              f"label={task.status_label}")
+
+
 def main() -> None:
+    print("=== Проверка системы задач ===")
 
     # Генератор
     generator = GeneratorTaskSource(count=2)
     gen_tasks = collect_tasks(generator)
-    print("Generator:", gen_tasks)
+    print_tasks("Generator", gen_tasks)
 
-    # API заглушка
+    # API (заглушка)
     api = ApiTaskSource("http://example.com")
     api_tasks = collect_tasks(api)
-    print("API:", api_tasks)
+    print_tasks("API", api_tasks)
 
     # Файл
     base_dir = Path(__file__).resolve().parent
     file_path = base_dir / "tasks.json"
     file_source = FileTaskSource(str(file_path))
     file_tasks = collect_tasks(file_source)
-    print("File:", file_tasks)
+    print_tasks("File", file_tasks)
 
 
 if __name__ == "__main__":
