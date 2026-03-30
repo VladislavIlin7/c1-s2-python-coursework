@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from src.exception import InvalidTaskDataException, InvalidTaskItemException
+from src.exception import InvalidTaskDataException, InvalidTaskItemException, InvalidTypeTaskDataException
 from src.sources.file_tasks_source import FileTaskSource
 from src.task_model.task import Task
 
@@ -42,4 +42,12 @@ def test_file_missing_id(tmp_path):
     path.write_text(json.dumps(data), encoding="utf-8")
 
     with pytest.raises(InvalidTaskItemException):
+        FileTaskSource(str(path)).get_tasks()
+
+def test_file_item_not_dict(tmp_path):
+    data = ["not a dict"]
+    path = tmp_path / "tasks.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+    with pytest.raises(InvalidTypeTaskDataException):
         FileTaskSource(str(path)).get_tasks()

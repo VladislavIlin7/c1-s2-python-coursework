@@ -31,8 +31,9 @@ class ApiTaskSource:
         # url = self._basic_url + "/" + self._path
 
         data = [
-            {"id": "1", "payload": "api task 1"},
-            {"id": "2", "payload": "api task 2"}
+            {"id": "1", "payload": "api task 1", "priority": 1, "status": "new"},
+            {"id": "2", "payload": "api task 2", "priority": 3, "status": "in_progress"},
+            {"id": "3", "payload": "api task 3", "priority": 5, "status": "done"},
         ]
         tasks: list[Task] = []
 

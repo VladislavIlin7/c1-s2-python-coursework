@@ -4,7 +4,7 @@ from src.task_model.task import Task
 
 
 @runtime_checkable
-class TaskSource(Protocol):
+class TaskMapperSource(Protocol):
     """
     Контракт для источников задач
 

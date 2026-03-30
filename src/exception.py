@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class ApplicationException(Exception):
     """Базовый класс исключений"""
 
@@ -44,10 +47,9 @@ class InvalidTaskPriorityException(ApplicationException):
     def __init__(self) -> None:
         super().__init__("Приоритет задачи должен быть целым числом >= 0")
 
-
 class InvalidTaskStatusException(ApplicationException):
-    def __init__(self) -> None:
-        super().__init__("Статус задачи имеет недопустимое значение")
+    def __init__(self, status: Any) -> None:
+        super().__init__(f"Статус задачи имеет недопустимое значение: {status}")
 
 
 class InvalidTaskCreatedAtException(ApplicationException):

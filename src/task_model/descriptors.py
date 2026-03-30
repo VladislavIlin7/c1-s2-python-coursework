@@ -3,25 +3,25 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from src.exception import (
-    InvalidTaskIdException,
-    InvalidTaskDescriptionException,
-    InvalidTaskPriorityException,
-    InvalidTaskStatusException,
-    InvalidTaskCreatedAtException,
-)
+from src.exception import InvalidTaskIdException, InvalidTaskDescriptionException, InvalidTaskPriorityException, \
+    InvalidTaskStatusException, InvalidTaskCreatedAtException
 
 
-class TaskIdDescriptor:
-    """Дескриптор для id задачи"""
+class BaseStorageDescriptor:
+    """Базовый дескриптор с автоматическим вычислением storage_name"""
 
-    def __init__(self, storage_name: str) -> None:
-        self.storage_name = storage_name
+    def __set_name__(self, owner: type, name: str) -> None:
+        self.public_name = name
+        self.storage_name = f"_{name}"
 
-    def __get__(self, instance: Any, owner: type | None = None) -> str | TaskIdDescriptor:
+    def __get__(self, instance: Any, owner: type | None = None):
         if instance is None:
             return self
         return getattr(instance, self.storage_name)
+
+
+class TaskIdDescriptor(BaseStorageDescriptor):
+    """Дескриптор для id задачи"""
 
     def __set__(self, instance: Any, value: Any) -> None:
         if not isinstance(value, str) or not value.strip():
@@ -29,16 +29,8 @@ class TaskIdDescriptor:
         setattr(instance, self.storage_name, value.strip())
 
 
-class TaskDescriptionDescriptor:
+class TaskDescriptionDescriptor(BaseStorageDescriptor):
     """Дескриптор для описания задачи"""
-
-    def __init__(self, storage_name: str) -> None:
-        self.storage_name = storage_name
-
-    def __get__(self, instance: Any, owner: type | None = None) -> str | TaskDescriptionDescriptor:
-        if instance is None:
-            return self
-        return getattr(instance, self.storage_name)
 
     def __set__(self, instance: Any, value: Any) -> None:
         if not isinstance(value, str) or not value.strip():
@@ -46,16 +38,8 @@ class TaskDescriptionDescriptor:
         setattr(instance, self.storage_name, value.strip())
 
 
-class TaskPriorityDescriptor:
+class TaskPriorityDescriptor(BaseStorageDescriptor):
     """Дескриптор для приоритета задачи"""
-
-    def __init__(self, storage_name: str) -> None:
-        self.storage_name = storage_name
-
-    def __get__(self, instance: Any, owner: type | None = None) -> int | TaskPriorityDescriptor:
-        if instance is None:
-            return self
-        return getattr(instance, self.storage_name)
 
     def __set__(self, instance: Any, value: Any) -> None:
         if not isinstance(value, int) or value < 0:
@@ -63,35 +47,19 @@ class TaskPriorityDescriptor:
         setattr(instance, self.storage_name, value)
 
 
-class TaskStatusDescriptor:
+class TaskStatusDescriptor(BaseStorageDescriptor):
     """Дескриптор для статуса задачи"""
 
-    ALLOWED_STATUSES = {"new", "in_progress", "done", "cancelled"}
-
-    def __init__(self, storage_name: str) -> None:
-        self.storage_name = storage_name
-
-    def __get__(self, instance: Any, owner: type | None = None) -> str | TaskStatusDescriptor:
-        if instance is None:
-            return self
-        return getattr(instance, self.storage_name)
+    ALLOWED_STATUSES = {"new", "in_progress", "completed", "cancelled"}
 
     def __set__(self, instance: Any, value: Any) -> None:
         if not isinstance(value, str) or value not in self.ALLOWED_STATUSES:
-            raise InvalidTaskStatusException()
+            raise InvalidTaskStatusException(value)
         setattr(instance, self.storage_name, value)
 
 
-class TaskCreatedAtDescriptor:
+class TaskCreatedAtDescriptor(BaseStorageDescriptor):
     """Дескриптор для времени создания задачи"""
-
-    def __init__(self, storage_name: str) -> None:
-        self.storage_name = storage_name
-
-    def __get__(self, instance: Any, owner: type | None = None) -> datetime | TaskCreatedAtDescriptor:
-        if instance is None:
-            return self
-        return getattr(instance, self.storage_name)
 
     def __set__(self, instance: Any, value: Any) -> None:
         if not isinstance(value, datetime):
@@ -100,16 +68,19 @@ class TaskCreatedAtDescriptor:
 
 
 class StatusLabelDescriptor:
-    """Non-data descriptor для человекочитаемой метки статуса"""
+    """Non-data descriptor для русского статуса"""
 
-    def __get__(self, instance: Any, owner: type | None = None) -> str | StatusLabelDescriptor:
+    def __set_name__(self, owner: type, name: str) -> None:
+        self.public_name = name
+
+    def __get__(self, instance: Any, owner: type | None = None):
         if instance is None:
             return self
 
         mapping = {
             "new": "Новая",
             "in_progress": "В работе",
-            "done": "Завершена",
+            "completed": "Завершена",
             "cancelled": "Отменена",
         }
         return mapping[instance.status]

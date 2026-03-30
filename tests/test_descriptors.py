@@ -2,14 +2,10 @@ from datetime import datetime
 
 import pytest
 
+from src.exception import InvalidTaskIdException, InvalidTaskDescriptionException, InvalidTaskPriorityException, \
+    InvalidTaskStatusException, InvalidTaskCreatedAtException
 from src.task_model.task import Task
-from src.exception import (
-    InvalidTaskCreatedAtException,
-    InvalidTaskDescriptionException,
-    InvalidTaskIdException,
-    InvalidTaskPriorityException,
-    InvalidTaskStatusException,
-)
+
 
 
 def test_valid_task_creation():

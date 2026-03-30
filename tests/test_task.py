@@ -16,8 +16,7 @@ def test_create_task():
     assert task.priority == 1
     assert task.status == "new"
     assert task.created_at == created_at
-    assert task.is_ready is True
-    assert task.is_done is False
+    assert task.is_ready_to_start is True
     assert task.status_label == "Новая"
     assert task.age_seconds >= 0
 
@@ -29,11 +28,31 @@ def test_status_flow():
     assert task.status == "in_progress"
 
     task.complete()
-    assert task.status == "done"
-    assert task.is_done is True
+    assert task.status == "completed"
 
     task.cancel()
     assert task.status == "cancelled"
+
+
+def test_start_invalid_state():
+    task = Task("1", "test", 0, "in_progress")
+
+    with pytest.raises(InvalidTaskStatusException):
+        task.start()
+
+
+def test_complete_invalid_state():
+    task = Task("1", "test", 0, "new")
+
+    with pytest.raises(InvalidTaskStatusException):
+        task.complete()
+
+
+def test_cancel_invalid_state():
+    task = Task("1", "test", 0, "in_progress")
+
+    with pytest.raises(InvalidTaskStatusException):
+        task.cancel()
 
 
 def test_status_change_to_invalid_value_raises_error():

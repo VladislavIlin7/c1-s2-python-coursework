@@ -1,13 +1,20 @@
 [
   {
-    "id": "1",
-    "payload": "file task 1"
+    "id": "10",
+    "payload": "file task 1",
+    "priority": 0,
+    "status": "new"
   },
   {
-    "id": "2",
-    "payload": {
-      "type": "email",
-      "to": "user@test.com"
-    }
+    "id": "11",
+    "payload": "file task 2",
+    "priority": 2,
+    "status": "completed"
+  },
+  {
+    "id": "12",
+    "payload": "file task 3",
+    "priority": 1,
+    "status": "cancelled"
   }
 ]
