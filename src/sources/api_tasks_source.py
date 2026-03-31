@@ -33,7 +33,7 @@ class ApiTaskSource:
         data = [
             {"id": "1", "payload": "api task 1", "priority": 1, "status": "new"},
             {"id": "2", "payload": "api task 2", "priority": 3, "status": "in_progress"},
-            {"id": "3", "payload": "api task 3", "priority": 5, "status": "done"},
+            {"id": "3", "payload": "api task 3", "priority": 5, "status": "completed"},
         ]
         tasks: list[Task] = []
 

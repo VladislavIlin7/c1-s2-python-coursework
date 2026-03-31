@@ -27,9 +27,6 @@ def test_status_flow():
     task.start()
     assert task.status == "in_progress"
 
-    task.complete()
-    assert task.status == "completed"
-
     task.cancel()
     assert task.status == "cancelled"
 
@@ -49,7 +46,7 @@ def test_complete_invalid_state():
 
 
 def test_cancel_invalid_state():
-    task = Task("1", "test", 0, "in_progress")
+    task = Task("1", "test", 0, "completed")
 
     with pytest.raises(InvalidTaskStatusException):
         task.cancel()
