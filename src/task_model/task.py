@@ -57,7 +57,7 @@ class Task:
             raise InvalidTaskStatusException(self.status)
 
     def cancel(self) -> None:
-        if self.is_completed:
+        if not self.is_completed:
             self.status = "cancelled"
         else:
             raise InvalidTaskStatusException(self.status)
