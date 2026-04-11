@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 
 from src.exception import InvalidTaskIdException, InvalidTaskDescriptionException, InvalidTaskPriorityException, \
-    InvalidTaskStatusException, InvalidTaskCreatedAtException
+    InvalidTaskStatusException, InvalidTaskCreatedAtException, InvalidStatusLabelException
 
 
 class BaseStorageDescriptor:
@@ -68,12 +68,7 @@ class TaskCreatedAtDescriptor(BaseStorageDescriptor):
 
 
 class StatusLabelDescriptor:
-    """Non-data descriptor для русского статуса"""
-
-    def __set_name__(self, owner: type, name: str) -> None:
-        self.public_name = name
-
-    def __get__(self, instance: Any, owner: type | None = None):
+    def __get__(self, instance, owner=None) -> StatusLabelDescriptor | str:
         if instance is None:
             return self
 
@@ -83,4 +78,13 @@ class StatusLabelDescriptor:
             "completed": "Завершена",
             "cancelled": "Отменена",
         }
-        return mapping[instance.status]
+
+        try:
+            status = instance.status
+        except AttributeError:
+            raise InvalidTaskStatusException
+
+        if status not in mapping:
+            raise InvalidStatusLabelException(status)
+
+        return mapping[status]
