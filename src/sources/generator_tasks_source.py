@@ -1,4 +1,5 @@
 import logging
+import random
 from typing import Any
 
 from src.exception import InvalidCountException
@@ -36,19 +37,23 @@ class GeneratorTaskSource:
         """
         logger.info("Генерация %s задач", self._count)
 
+        allowed_statuses = ["new", "in_progress", "completed", "cancelled"]
+
         tasks: list[Task] = []
         for i in range(self._count):
             task_id = self._start_id + i
+
             if self._payload_sample is None:
                 payload = f"generated task {task_id}"
             else:
                 payload = self._payload_sample
+
             tasks.append(
                 Task(
                     id=str(task_id),
                     description=str(payload),
-                    priority=0,
-                    status="new",
+                    priority=random.randint(0, 5),
+                    status=random.choice(allowed_statuses),
                 )
             )
 

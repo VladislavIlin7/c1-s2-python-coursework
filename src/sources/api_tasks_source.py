@@ -32,7 +32,7 @@ class ApiTaskSource:
 
         data = [
             {"id": "1", "payload": "api task 1", "priority": 1, "status": "new"},
-            {"id": "2", "payload": "api task 2", "priority": 3, "status": "in_progress"},
+            {"id": "2", "payload": "api task 2", "priority": 0, "status": "new"},
             {"id": "3", "payload": "api task 3", "priority": 5, "status": "completed"},
         ]
         tasks: list[Task] = []
@@ -40,6 +40,8 @@ class ApiTaskSource:
         for item in data:
             task_id = item.get("id")
             payload = item.get("payload")
+            priority = item.get("priority", 0)
+            status = item.get("status", "new")
 
             if task_id is None:
                 logger.error("Задачи должны иметь свой id")
@@ -49,8 +51,8 @@ class ApiTaskSource:
                 Task(
                     id=str(task_id),
                     description=str(payload),
-                    priority=0,
-                    status="new",
+                    priority=priority,
+                    status=status,
                 )
             )
 

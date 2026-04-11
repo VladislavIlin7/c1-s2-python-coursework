@@ -55,3 +55,7 @@ class InvalidTaskStatusException(ApplicationException):
 class InvalidTaskCreatedAtException(ApplicationException):
     def __init__(self) -> None:
         super().__init__("Время создания задачи должно быть объектом datetime")
+
+class InvalidStatusLabelException(ApplicationException):
+    def __init__(self, status: str) -> None:
+        super().__init__(f"Неизвестный статус: {status}")

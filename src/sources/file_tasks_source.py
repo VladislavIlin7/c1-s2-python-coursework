@@ -43,6 +43,8 @@ class FileTaskSource:
 
             task_id = item.get("id")
             payload = item.get("payload")
+            priority = item.get("priority", 0)
+            status = item.get("status", "new")
 
             if task_id is None:
                 logger.error("Задачи должны иметь свой id")
@@ -52,8 +54,8 @@ class FileTaskSource:
                 Task(
                     id=str(task_id),
                     description=str(payload),
-                    priority=0,
-                    status="new",
+                    priority=priority,
+                    status=status,
                 )
             )
 
