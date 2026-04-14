@@ -47,6 +47,7 @@ class InvalidTaskPriorityException(ApplicationException):
     def __init__(self) -> None:
         super().__init__("Приоритет задачи должен быть целым числом >= 0")
 
+
 class InvalidTaskStatusException(ApplicationException):
     def __init__(self, status: Any) -> None:
         super().__init__(f"Статус задачи имеет недопустимое значение: {status}")
@@ -56,6 +57,12 @@ class InvalidTaskCreatedAtException(ApplicationException):
     def __init__(self) -> None:
         super().__init__("Время создания задачи должно быть объектом datetime")
 
+
 class InvalidStatusLabelException(ApplicationException):
     def __init__(self, status: str) -> None:
         super().__init__(f"Неизвестный статус: {status}")
+
+
+class InvalidIntervalException(ApplicationException):
+    def __init__(self) -> None:
+        super().__init__(f"min_priority не может быть больше max_priority")
