@@ -1,47 +1,45 @@
+import asyncio
 import logging
 import sys
-from pathlib import Path
 
+from src.execute.executor import TaskExecutor
+from src.execute.handler import Handler
 from src.receiver.collect_tasks import collect_tasks
-from src.sources.api_tasks_source import ApiTaskSource
-from src.sources.file_tasks_source import FileTaskSource
 from src.sources.generator_tasks_source import GeneratorTaskSource
+from src.task_model.task import Task
 
 logging.basicConfig(
     level=logging.INFO,
-    format='[%(asctime)s] %(levelname)s: %(message)s',
-    stream=sys.stdout
+    format="[%(asctime)s] %(levelname)s: %(message)s",
+    stream=sys.stdout,
 )
 
 
-def print_tasks(title: str, tasks: list) -> None:
-    print(f"\n=== {title} ({len(tasks)} задач) ===")
+def print_tasks(title: str, tasks: list[Task]) -> None:
+    print(f"\n=== {title} ({len(tasks)} tasks) ===")
 
     for i, task in enumerate(tasks, start=1):
-        print(f"[{i}] id={task.id}, desc={task.description}, "
-              f"priority={task.priority}, status={task.status}, "
-              f"label={task.status_label}")
+        print(
+            f"[{i}] id={task.id}, desc={task.description}, "
+            f"priority={task.priority}, status={task.status}"
+        )
+
+
+async def demo_async_executor() -> None:
+    print("=== Async Task Queue Demo ===")
+
+    tasks = collect_tasks(GeneratorTaskSource(count=3))
+
+    print_tasks("Before executor run", tasks)
+
+    executor = TaskExecutor(handler=Handler(processing_delay=0.2), worker_count=2)
+    await executor.run(tasks)
+
+    print_tasks("After processing", tasks)
 
 
 def main() -> None:
-    print("=== Проверка системы задач ===")
-
-    # Генератор
-    generator = GeneratorTaskSource(count=2)
-    gen_tasks = collect_tasks(generator)
-    print_tasks("Generator", gen_tasks)
-
-    # API (заглушка)
-    api = ApiTaskSource("http://example.com")
-    api_tasks = collect_tasks(api)
-    print_tasks("API", api_tasks)
-
-    # Файл
-    base_dir = Path(__file__).resolve().parent
-    file_path = base_dir / "tasks.json"
-    file_source = FileTaskSource(str(file_path))
-    file_tasks = collect_tasks(file_source)
-    print_tasks("File", file_tasks)
+    asyncio.run(demo_async_executor())
 
 
 if __name__ == "__main__":
