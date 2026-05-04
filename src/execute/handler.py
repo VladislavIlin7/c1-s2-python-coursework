@@ -7,7 +7,10 @@ logger = logging.getLogger(__name__)
 
 
 class Handler:
+    """Асинхронный обработчик Task"""
+
     def __init__(self, processing_delay: float = 0.5) -> None:
+        """Создает обработчик с задержкой обработки"""
         self._processing_delay = processing_delay
 
     async def handle(self, task: Task) -> None:

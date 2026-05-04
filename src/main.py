@@ -28,12 +28,16 @@ def print_tasks(title: str, tasks: list[Task]) -> None:
 async def demo_async_executor() -> None:
     print("=== Async Task Queue Demo ===")
 
-    tasks = collect_tasks(GeneratorTaskSource(count=3))
+    tasks = collect_tasks(GeneratorTaskSource(count=6))
+    for task in tasks:
+        task.status = "new"
 
     print_tasks("Before executor run", tasks)
 
-    executor = TaskExecutor(handler=Handler(processing_delay=0.2), worker_count=2)
-    await executor.run(tasks)
+    handler = Handler(processing_delay=0.2)
+
+    async with TaskExecutor(handler=handler, worker_count=2) as executor:
+        await executor.run(tasks)
 
     print_tasks("After processing", tasks)
 

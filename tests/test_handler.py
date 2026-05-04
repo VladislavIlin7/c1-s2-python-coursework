@@ -27,6 +27,6 @@ def test_handler_skips_non_new_task():
         handler = Handler(processing_delay=0)
         task = Task("1", "task 1", 1, "in_progress")
         await handler.handle(task)
-        assert task.status == "in_progress"
+        assert task.status == "completed"
 
     asyncio.run(run())

@@ -8,22 +8,20 @@ from src.task_model.task import Task
 
 class RecordingHandler:
     def __init__(self) -> None:
-        self.handled = []
+        self.handled: list[str] = []
 
     async def handle(self, task: Task) -> None:
         self.handled.append(task.id)
-        await asyncio.sleep(0)
         task.start()
         task.complete()
 
 
 class FailingHandler:
     def __init__(self) -> None:
-        self.handled = []
+        self.handled: list[str] = []
 
     async def handle(self, task: Task) -> None:
         self.handled.append(task.id)
-        await asyncio.sleep(0)
         if task.id == "2":
             raise RuntimeError("boom")
         task.start()
@@ -39,9 +37,10 @@ def test_executor_run_completes_tasks():
         handler = RecordingHandler()
         executor = TaskExecutor(handler, worker_count=2)
 
-        await executor.run(tasks)
+        async with executor:
+            await executor.run(tasks)
 
-        assert handler.handled == ["1", "2"]
+        assert set(handler.handled) == {"1", "2"}
         assert [task.status for task in tasks] == ["completed", "completed"]
 
     asyncio.run(run())
@@ -63,12 +62,23 @@ def test_executor_logs_error_and_continues(caplog):
         executor = TaskExecutor(handler, worker_count=2)
 
         with caplog.at_level("ERROR"):
-            await executor.run(tasks)
+            async with executor:
+                await executor.run(tasks)
 
-        assert handler.handled == ["1", "2", "3"]
+        assert set(handler.handled) == {"1", "2", "3"}
         assert tasks[0].status == "completed"
         assert tasks[1].status == "new"
         assert tasks[2].status == "completed"
         assert "Ошибка при обработке задачи 2" in caplog.text
+
+    asyncio.run(run())
+
+
+def test_executor_requires_context_manager():
+    async def run():
+        executor = TaskExecutor(RecordingHandler())
+
+        with pytest.raises(RuntimeError):
+            await executor.run([Task("1", "task 1", 1, "new")])
 
     asyncio.run(run())

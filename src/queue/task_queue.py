@@ -10,6 +10,7 @@ class ReplayableTasks:
     def __init__(self, tasks: Iterable[Task]) -> None:
         self._source = iter(tasks)
         self._cache: list[Task] = []
+        self._added: list[Task] = []
         self._exhausted = False
 
     def __iter__(self) -> Iterator[Task]:
@@ -22,26 +23,29 @@ class ReplayableTasks:
                 continue
 
             if self._exhausted:
+                added_index = index - len(self._cache)
+                if added_index < len(self._added):
+                    yield self._added[added_index]
+                    index += 1
+                    continue
                 return
 
             try:
                 item = next(self._source)
             except StopIteration:
                 self._exhausted = True
-                return
+                continue
 
             self._cache.append(item)
-            yield item
-            index += 1
 
     def append(self, item: Task) -> None:
         """Добавление задачи в кэш"""
-        self._cache.append(item)
+        self._added.append(item)
 
     @property
     def cached_count(self) -> int:
         """Количество кэшированных задач"""
-        return len(self._cache)
+        return len(self._cache) + len(self._added)
 
 
 class TaskQueue:

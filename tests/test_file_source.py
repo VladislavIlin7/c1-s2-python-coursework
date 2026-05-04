@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -7,16 +8,24 @@ from src.sources.file_tasks_source import FileTaskSource
 from src.task_model.task import Task
 
 
-def test_file_basic(tmp_path):
+def write_tasks_file(data, filename: str) -> Path:
+    path = Path(__file__).with_name(filename)
+    path.write_text(json.dumps(data), encoding="utf-8")
+    return path
+
+
+def test_file_basic():
     data = [
         {"id": "1", "payload": "a"},
         {"id": "2", "payload": "b"},
     ]
-    path = tmp_path / "tasks.json"
-    path.write_text(json.dumps(data), encoding="utf-8")
+    path = write_tasks_file(data, "_test_tasks_basic.json")
 
-    source = FileTaskSource(str(path))
-    tasks = source.get_tasks()
+    try:
+        source = FileTaskSource(str(path))
+        tasks = source.get_tasks()
+    finally:
+        path.unlink(missing_ok=True)
 
     assert len(tasks) == 2
     assert isinstance(tasks[0], Task)
@@ -27,27 +36,34 @@ def test_file_basic(tmp_path):
     assert tasks[1].description == "b"
 
 
-def test_file_not_list(tmp_path):
+def test_file_not_list():
     data = {"id": "1"}
-    path = tmp_path / "tasks.json"
-    path.write_text(json.dumps(data), encoding="utf-8")
+    path = write_tasks_file(data, "_test_tasks_not_list.json")
 
-    with pytest.raises(InvalidTaskDataException):
-        FileTaskSource(str(path)).get_tasks()
+    try:
+        with pytest.raises(InvalidTaskDataException):
+            FileTaskSource(str(path)).get_tasks()
+    finally:
+        path.unlink(missing_ok=True)
 
 
-def test_file_missing_id(tmp_path):
+def test_file_missing_id():
     data = [{"payload": "x"}]
-    path = tmp_path / "tasks.json"
-    path.write_text(json.dumps(data), encoding="utf-8")
+    path = write_tasks_file(data, "_test_tasks_missing_id.json")
 
-    with pytest.raises(InvalidTaskItemException):
-        FileTaskSource(str(path)).get_tasks()
+    try:
+        with pytest.raises(InvalidTaskItemException):
+            FileTaskSource(str(path)).get_tasks()
+    finally:
+        path.unlink(missing_ok=True)
 
-def test_file_item_not_dict(tmp_path):
+
+def test_file_item_not_dict():
     data = ["not a dict"]
-    path = tmp_path / "tasks.json"
-    path.write_text(json.dumps(data), encoding="utf-8")
+    path = write_tasks_file(data, "_test_tasks_item_not_dict.json")
 
-    with pytest.raises(InvalidTypeTaskDataException):
-        FileTaskSource(str(path)).get_tasks()
+    try:
+        with pytest.raises(InvalidTypeTaskDataException):
+            FileTaskSource(str(path)).get_tasks()
+    finally:
+        path.unlink(missing_ok=True)

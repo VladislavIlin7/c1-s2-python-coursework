@@ -103,3 +103,20 @@ def test_add_task_and_repr():
 
     assert len(queue) == 1
     assert repr(queue) == "TaskQueue(cached=1)"
+
+
+def test_add_task_keep_order_when_iterated():
+    queue = TaskQueue([
+        Task("1", "task 1", 1, "new"),
+        Task("2", "task 2", 2, "new"),
+    ])
+
+    iterator = iter(queue)
+    first_task = next(iterator)
+
+    queue.add_task(Task("3", "task 3", 3, "new"))
+
+    remaining_ids = [task.id for task in iterator]
+
+    assert first_task.id == "1"
+    assert remaining_ids == ["2", "3"]
